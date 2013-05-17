@@ -1,8 +1,60 @@
 #!/usr/bin/env node
 
 var forever = require('forever'),
-    path = require('path');
+    path = require('path'),
+    util = require('../src/util');
 
-var cmd = [path.join(__dirname, '_veyron')];
-console.log(process.argv);
-// forever.startDaemon(cmd, {});
+var BIN_VEYRON = path.join(__dirname, '_veyron');
+var program = util.commanderSupport();
+// console.log(program);
+
+if (program.list) {
+    list();
+} else if (program.stop) {
+    switch (program.stop) {
+    case 'grace-stop-all':
+    default:
+        graceStopAll();
+        break;
+    }
+} else {
+    console.log('[info] Running Veyron with %s in Port %d', program.target, program.port);
+    forever.startDaemon(BIN_VEYRON, { options: process.argv.splice(process.argv.indexOf(__filename) + 1) });
+}
+
+function list() {
+    forever.list(true, function (err, processes) {
+        if (processes) {
+            var veyronProcess = [];
+            processes.split('\n').forEach(function (line) {
+                if (~line.indexOf(BIN_VEYRON)) veyronProcess.push(line);
+            });
+            if (veyronProcess.length > 0) {
+                console.log('Veyron processes running');
+                veyronProcess.forEach(function (line) {
+                    console.log(line);
+                });
+            }
+        } else {
+            console.log('No Veyron Processes Running');
+        }
+    });
+}
+
+function graceStopAll() {
+    forever.list(false, function (err, processes) {
+        processes.forEach(function(_process) {
+            if (_process.file == BIN_VEYRON) {
+                var runner = forever.stop(_process.uid, true);
+                runner.on('stop', function (process) {
+                    console.log('Veyron Stopped Process:');
+                    console.log(process);
+                });
+                // runner.on('error', function (err) {
+                    // forever.log.error('Forever cannot find process with index: ' + file);
+                    // process.exit(1);
+                // });
+            }
+        });
+    });
+}

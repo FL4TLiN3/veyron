@@ -1,19 +1,10 @@
 #!/usr/bin/env node
 
-var program = require('commander'),
-    path = require('path'),
+var path = require('path'),
     fs = require('fs'),
     Veyron = require('../'),
-    veyron;
+    veyron, program;
 
-program
-.version(JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8')).version)
-.option('-t, --target [directory]', 'specify the public directory [./public/]', './public/')
-.option('-p, --port [number]', 'specify port number [3000]', 3000)
-.parse(process.argv);
-
-console.log(program);
-console.log('  - running Veyron with %s in port %d', program.target, program.port);
-
+program = util.commanderSupport();
 veyron = new Veyron(program.target);
 veyron.run(program.port);
