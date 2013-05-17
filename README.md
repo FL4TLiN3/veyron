@@ -15,6 +15,8 @@ then open `http://localhost:3000` by your browser.
 
 + `-t` target directory, by default './public/'.
 + `-p` listening port, by default '3000'.
++ `-s` stop all Veyron servers.
++ `-l` list all Veyron servers.
 
 ## License
 MIT
