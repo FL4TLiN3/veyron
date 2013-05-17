@@ -3,6 +3,7 @@
 var path = require('path'),
     fs = require('fs'),
     Veyron = require('../'),
+    util = require('../src/util'),
     veyron, program;
 
 program = util.commanderSupport();
