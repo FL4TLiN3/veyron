@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+var forever = require('forever'),
+    path = require('path');
+
+var cmd = [path.join(__dirname, '_veyron')];
+console.log(process.argv);
+// forever.startDaemon(cmd, {});
