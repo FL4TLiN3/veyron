@@ -43,11 +43,11 @@ function list() {
 
 function graceStopAll() {
     forever.list(false, function (err, processes) {
+        console.log('Veyron Stopped Process:');
         processes.forEach(function(_process) {
             if (_process.file == BIN_VEYRON) {
                 var runner = forever.stop(_process.uid, true);
                 runner.on('stop', function (process) {
-                    console.log('Veyron Stopped Process:');
                     console.log(process);
                 });
                 // runner.on('error', function (err) {
